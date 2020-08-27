@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">    
+    <title>韦韦生日快乐</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/zepto.fullpage.css">
+    <style>
+        .music{
+            position: absolute;
+            z-index: 1000;
+            right: 0px;
+            top: 0px;
+            padding: 10px;
+            width: 25px;
+            height: 25px;
+        }
+        .music .music-btn {
+            display: block;
+            padding-left: 1px;
+            width: 25px;
+            height: 25px;
+            background-image: url(css/img/music-1.png);
+            background-size: 100% 100%;
+        }
+        .music .music-btn.play {
+            background-image: url(css/img/music-0.png);
+        }
+    </style>
+</head>
+<body>
+    <div id="music" class="music">
+        <a class="music-btn"></a>
+    </div>
+    <div class="wp">
+        <div class="wp-inner">
+            <div class="page page1">
+                 <p>我是个俗气至顶的人</p>
+                 <img class="sgif-img" src="./img/1.gif" alt=""> 
+            </div>
+            <div class="page page2">
+              <p>见山是山</p>
+                <img class="sgif-img" src="./img/2.gif" alt=""> 
+                  <p>见海是海</p>
+                <img class="sgif-img" src="./img/3.gif" alt=""> 
+            </div>
+            <div class="page page3">
+                <p>见花便是花</p>
+                <img class="sgif-img" src="./img/4.gif" alt=""> 
+            </div>
+            <div class="page page4">
+                <p>见你</p>
+                <p>便不想再见其他了</p>
+                <img class="dg-img" src="./img/5.gif" alt=""> 
+            </div>
+            <div class="page page5">
+                <p>韦韦</p>
+                <p>生日快乐</p>
+                <a href="wei.html">
+                    <img class="dg-img" src="./img/dg.gif" alt=""> 
+                </a>
+            </div>
+        </div>
+    </div>
+    <span class="start"><b></b></span>
+    <script src="js/zepto.js"></script>
+    <script src="js/zepto.fullpage.js"></script>
+    <script>
+        $('.wp-inner').fullpage();
+    </script>
+    <script>
+        function recollect(){
+            console.log('1111')
+            window.location.href="wei.html";
+        }
+        var bgAudio = new Audio();
+        bgAudio.loadStatus = 'unload';
+        bgAudio.loop = true;
+        function loadAudio(audio, url, callback) {
+            audio.src = url;
+            audio.load();
+            audio.addEventListener('canplay', function () {
+                bgAudio.loadStatus = 'loaded';
+                callback();
+            });
+            audio.addEventListener('loadstart', function () {
+                bgAudio.loadStatus = 'loading';
+            });
+        }
+        function playAudio(){
+            if (bgAudio.loadStatus === 'unload') {
+                loadAudio(bgAudio, 'media/bg.mp3', function () {
+                    playAudio();
+                });
+                return 1;
+            }
+
+            bgAudio.play();
+        }
+        function stopAudio() {
+            bgAudio.pause();
+        }
+        bgAudio.addEventListener('playing' ,function (e) {
+            $('#music .music-btn').addClass('play');
+        });
+        bgAudio.addEventListener('pause' ,function (e) {
+            $('#music .music-btn').removeClass('play');
+        });
+
+        $('body').one('touchstart', function () {
+            playAudio();
+            $('#music').on('touchstart', function (e) {
+                if (bgAudio.paused) {
+                    playAudio();
+                    return 0;
+                }
+                stopAudio();
+                return 1;
+            });
+        });
+        window.onload = function() {
+            if (bgAudio.loadStatus !== 'unload') {return;}
+            playAudio();
+        };
+    </script>
+</body>
+</html>
